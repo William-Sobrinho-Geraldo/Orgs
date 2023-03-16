@@ -13,5 +13,4 @@ interface ProdutoDao {
 
     @Insert
     fun salva(vararg produto: Produto)
-
 }
