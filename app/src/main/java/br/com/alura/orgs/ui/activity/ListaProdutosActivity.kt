@@ -2,7 +2,12 @@ package br.com.alura.orgs.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
+import br.com.alura.orgs.R
 import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityListaProdutosActivityBinding
 import br.com.alura.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
@@ -21,6 +26,7 @@ class ListaProdutosActivity : AppCompatActivity() {
         configuraFab()
 
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -54,6 +60,12 @@ class ListaProdutosActivity : AppCompatActivity() {
                 putExtra(CHAVE_PRODUTO, it)
             }
             startActivity(intent)
+        }
+        adapter.quandoClicaEmEditar = {
+            Log.i("Teste", "configuraRecyclerView: Editar $it")
+        }
+        adapter.quandoClicaEmRemover = {
+            Log.i("Teste", "configuraRecyclerView: Remover $it")
         }
     }
 
