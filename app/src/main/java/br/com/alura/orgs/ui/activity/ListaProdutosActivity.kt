@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import br.com.alura.orgs.R
 import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityListaProdutosActivityBinding
+import br.com.alura.orgs.model.Produto
 import br.com.alura.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
 
 class ListaProdutosActivity : AppCompatActivity() {
@@ -30,7 +31,6 @@ class ListaProdutosActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-
         val db = AppDatabase.instancia(this)
         val produtoDao = db.produtoDao()
         adapter.atualiza(produtoDao.buscaTodos())
@@ -49,18 +49,17 @@ class ListaProdutosActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    private fun vaiParaDetalhesProduto(produto: Produto){
+        val intent = Intent(this,DetalhesProdutoActivity::class.java)
+        intent.putExtra(CHAVE_PRODUTO_ID, produto.id)
+        startActivity(intent)
+    }
+
     private fun configuraRecyclerView() {
         val recyclerView = binding.activityListaProdutosRecyclerView
         recyclerView.adapter = adapter
         adapter.quandoClicaNoItem = {
-            val intent = Intent(
-                this,
-                DetalhesProdutoActivity::class.java
-            ).apply {
-                putExtra(CHAVE_PRODUTO, it)
-            }
-            startActivity(intent)
+            vaiParaDetalhesProduto(it)
         }
     }
-
 }
