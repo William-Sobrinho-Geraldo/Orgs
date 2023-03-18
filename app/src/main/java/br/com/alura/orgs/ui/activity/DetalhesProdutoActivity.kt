@@ -8,6 +8,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.PopupMenu
 import br.com.alura.orgs.R
+import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityDetalhesProdutoBinding
 import br.com.alura.orgs.extensions.formataParaMoedaBrasileira
 import br.com.alura.orgs.extensions.tentaCarregarImagem
@@ -15,6 +16,7 @@ import br.com.alura.orgs.model.Produto
 
 class DetalhesProdutoActivity : AppCompatActivity() {
 
+    private lateinit var produto: Produto
     private val binding by lazy {
         ActivityDetalhesProdutoBinding.inflate(layoutInflater)
     }
@@ -31,19 +33,26 @@ class DetalhesProdutoActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_detalhes_remover -> {
-                Log.i("teste", "onOptionItemSelected: remover")
-            }
-            R.id.menu_detalhes_produto_editar -> {
-                Log.i("teste", "onOptionItemSelected: editar")
+        if (::produto.isInitialized){
+            val db = AppDatabase.instancia(this)
+            val produtoDao = db.produtoDao()
+            when (item.itemId) {
+                R.id.menu_detalhes_remover -> {
+                    produtoDao.remove(produto)
+                    finish()
+                }
+                R.id.menu_detalhes_produto_editar -> {
+                    Log.i("teste", "onOptionItemSelected: editar")
+                }
             }
         }
+
         return super.onOptionsItemSelected(item)
     }
 
     private fun tentaCarregarProduto() {
         intent.getParcelableExtra<Produto>(CHAVE_PRODUTO)?.let { produtoCarregado ->
+            produto = produtoCarregado
             preencheCampos(produtoCarregado)
         } ?: finish()
     }
