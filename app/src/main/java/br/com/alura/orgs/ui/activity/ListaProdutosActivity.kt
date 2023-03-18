@@ -61,12 +61,6 @@ class ListaProdutosActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
-        adapter.quandoClicaEmEditar = {
-            Log.i("Teste", "configuraRecyclerView: Editar $it")
-        }
-        adapter.quandoClicaEmRemover = {
-            Log.i("Teste", "configuraRecyclerView: Remover $it")
-        }
     }
 
 }

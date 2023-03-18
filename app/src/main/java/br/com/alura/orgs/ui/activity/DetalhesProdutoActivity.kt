@@ -26,7 +26,7 @@ class DetalhesProdutoActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-       // showMenu()
+        menuInflater.inflate(R.menu.menu_detalhes_produto, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -41,7 +41,6 @@ class DetalhesProdutoActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
 
     private fun tentaCarregarProduto() {
         intent.getParcelableExtra<Produto>(CHAVE_PRODUTO)?.let { produtoCarregado ->
@@ -58,7 +57,4 @@ class DetalhesProdutoActivity : AppCompatActivity() {
                 produtoCarregado.valor.formataParaMoedaBrasileira()
         }
     }
-
-
-
 }
