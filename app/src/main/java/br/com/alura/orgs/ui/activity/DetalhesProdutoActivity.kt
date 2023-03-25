@@ -11,6 +11,10 @@ import br.com.alura.orgs.databinding.ActivityDetalhesProdutoBinding
 import br.com.alura.orgs.extensions.formataParaMoedaBrasileira
 import br.com.alura.orgs.extensions.tentaCarregarImagem
 import br.com.alura.orgs.model.Produto
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DetalhesProdutoActivity : AppCompatActivity() {
 
@@ -19,7 +23,7 @@ class DetalhesProdutoActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityDetalhesProdutoBinding.inflate(layoutInflater)
     }
-
+    private val scope = CoroutineScope(Dispatchers.IO)
     private val produtoDao by lazy {
         AppDatabase.instancia(this).produtoDao()
     }
@@ -36,11 +40,17 @@ class DetalhesProdutoActivity : AppCompatActivity() {
     }
 
     private fun buscaProduto() {
-        produto = produtoDao.buscaPorId(produtoId)
-        produto?.let {
-            preencheCampos(it)
-        } ?: finish()
+
+        scope.launch {
+            produto = produtoDao.buscaPorId(produtoId)
+            withContext(Dispatchers.Main) {
+                produto?.let {
+                    preencheCampos(it)
+                } ?: finish()
+            }
+        }
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_detalhes_produto, menu)
@@ -52,8 +62,10 @@ class DetalhesProdutoActivity : AppCompatActivity() {
         val produtoDao = db.produtoDao()
         when (item.itemId) {
             R.id.menu_detalhes_remover -> {
-                produto?.let { produtoDao.remove(it) }
-                finish()
+                scope.launch {
+                    produto?.let { produtoDao.remove(it) }
+                    finish()
+                }
             }
             R.id.menu_detalhes_produto_editar -> {
                 Intent(this, FormularioProdutoActivity::class.java).apply {
